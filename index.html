@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="right">
+          <video id="user-2" autoplay></video>
+          <video id="user-1" autoplay muted></video>
+      </div>
+      <div class="left">
+        <h1>Messages</h1>
+        <div class="logs" id="logs">
+            <span style="text-align: center; display: block;">you can chat each-other</p>
+
+        </div>
+        <input type="text" id="chat-box">
+        <button id="send-msg">send</button>
+        <div class="rtc">
+          <h1>Web rtc configuration</h1>
+          <button id="create-offer">Create Tocken</button>
+          <input type="text" id="new-offer" /> <br />
+          <button id="create-answer">Create Answer</button>
+          <input type="text" id="new-answer" /> <br />
+          <button id="add-answer">Add Answer</button>
+          <input type="text" name="" id="get-answer" /> <br />
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
