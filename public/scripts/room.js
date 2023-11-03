@@ -1,7 +1,10 @@
+const socket = io();
 let peerConnection;
 let dataChannel;
 let localStream;
 let remoteStream;
+
+socket.emit("connected","ok")
 
 let servers = {
     iceServers: [
