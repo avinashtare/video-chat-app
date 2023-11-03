@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 // public directory
 app.use(express.static("public"))
 // port
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 
 app.get("/", (req, res) => {
