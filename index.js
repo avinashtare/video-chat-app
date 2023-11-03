@@ -2,11 +2,12 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io"; // Import Server from 'socket.io'
 import { v4 as uuid } from "uuid";
-import ejs from "ejs";
 
 const app = express(); // express app
 const server = http.createServer(app); // http server
-const io = new Server(server); // Create a Socket.io server instance
+const io = new Server(server, {
+    maxHttpBufferSize: 1e8 // 100 MB
+}); // Create a Socket.io server instance
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -34,9 +35,17 @@ server.listen(port, function () {
 io.on('connection', (socket) => {
     console.log('a user connected');
 
-    socket.on('connected', (msg) => {
-        console.log('message: ' + msg);
+    socket.on('isAvailable', (path) => {
+        socket.broadcast.emit("isThare", path)
     });
+
+    socket.on("offer",(offer)=>{
+        socket.broadcast.emit("getOffer", offer)
+    })
+    socket.on("answer",(answer)=>{
+        socket.broadcast.emit("getAnswer", answer)
+    })
+
 
     socket.on('disconnect', () => {
         console.log('user disconnected');

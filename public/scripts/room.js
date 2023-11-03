@@ -1,11 +1,32 @@
 const socket = io();
-let peerConnection;
+let peerConnection = false;
 let dataChannel;
 let localStream;
 let remoteStream;
+let path = new URL(document.URL).pathname;
+let offer;
+let answer;
 
-socket.emit("connected","ok")
+path = path.split("/")[2];
+socket.emit("isAvailable", path)
 
+socket.on("isThare", async (e) => {
+    if (e == path && !peerConnection) {
+        createOffer()
+    }
+})
+
+socket.on("getOffer", async (e) => {
+    offer = e
+    createAnswer()
+})
+socket.on("getAnswer", async (e) => {
+    answer = (e)
+    addAnswer()
+})
+
+
+// servers
 let servers = {
     iceServers: [
         {
@@ -19,9 +40,8 @@ let init = async () => {
 }
 init()
 
-let createOffer = async (e) => {
+let createOffer = async () => {
     peerConnection = new RTCPeerConnection(servers);
-
 
     // remote track
     remoteStream = new MediaStream()
@@ -53,11 +73,19 @@ let createOffer = async (e) => {
 
     dataChannel.onclose = ((e) => {
         console.log("Closed: ", e)
+        peerConnection = false;
     })
 
     peerConnection.onicecandidate = (e) => {
         // console.log("Candidate Key: ",JSON.stringify(peerConnection.localDescription))
-        document.getElementById("new-offer").value = JSON.stringify(peerConnection.localDescription);
+        if (e.candidate) {
+            lastCandidate = e.candidate; // Store the last candidate
+        } else {
+            // ICE gathering is complete, emit the offer or answer
+            if (lastCandidate) {
+                socket.emit("offer", JSON.stringify(peerConnection.localDescription));
+            }
+        }
     }
 
     let offer = await peerConnection.createOffer()
@@ -85,13 +113,15 @@ let createAnswer = async () => {
         })
     }
 
-    let offer = document.getElementById("new-offer").value;
     offer = JSON.parse(offer)
 
     await peerConnection.setRemoteDescription(offer);
 
     peerConnection.onicecandidate = (e) => {
-        document.getElementById("new-answer").value = JSON.stringify(peerConnection.localDescription)
+        if (peerConnection.iceGatheringState === "complete") {
+            // ICE gathering is complete, display the final local description
+            socket.emit("answer", JSON.stringify(peerConnection.localDescription));
+        }
     }
 
     peerConnection.ondatachannel = (e) => {
@@ -107,6 +137,7 @@ let createAnswer = async () => {
 
         dataChannel.onclose = ((e) => {
             console.log("Closed: ", e)
+            peerConnection = false;
         })
     }
 
@@ -116,7 +147,6 @@ let createAnswer = async () => {
 }
 
 let addAnswer = () => {
-    let answer = document.getElementById("get-answer").value;
     answer = JSON.parse(answer)
     peerConnection.setRemoteDescription(answer);
 }
@@ -142,7 +172,4 @@ let handleSendMsg = () => {
     setMsg(msg, "i")
 }
 
-document.getElementById("create-offer").addEventListener("click", createOffer)
-document.getElementById("create-answer").addEventListener("click", createAnswer)
-document.getElementById("add-answer").addEventListener("click", addAnswer)
 document.getElementById("send-msg").addEventListener("click", handleSendMsg)
