@@ -1,30 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Calling</title>
     <link rel="stylesheet" href="/styles/room.css" />
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <div class="right">
-          <video id="user-2" autoplay></video>
-          <video id="user-1" autoplay muted></video>
-      </div>
-      <div class="left">
-        <h1>Messages</h1>
-        <div class="logs" id="logs">
-            <span style="text-align: center; display: block;">you can chat each-other</p>
-
+        <nav class="nav">
+            <div class="logo">
+                <img src="logo.png" alt="">
+            </div>
+            <ul class="links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/" class="active">Room</a></li>
+                <li><a href="/">About</a></li>
+                <li><a href="/">Services</a></li>
+                <li><a href="/">Pricing</a></li>
+            </ul>
+        </nav>
+        <div class="chatArea">
+            <div class="video-sec partition">
+                <video class="video1" id="user-1" autoplay></video>
+                <video class="video2" id="user-2" muted autoplay></video>
+            </div>
+            <div class="chat-sec">
+                <div class="chatBox partition">
+                    <span style="color: white; font-size: 1.1rem;">camera is blocked retry again or realod...</span>
+                    <div id="logs"></div>
+                </div>
+                <div class="chatInput partition">
+                    <div class="chat-actions">
+                        <button class="chat-btn">
+                            <span>New</span><br>
+                            <span>Esc</span>
+                        </button>
+                        <div class="text-actions">
+                            <textarea id="chat-box" cols="30" rows="10"></textarea>
+                        </div>
+                        <button class="chat-btn" id="send-msg">
+                            <span>Send</span><br>
+                            <span>Enter</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <input type="text" id="chat-box">
-        <button id="send-msg">send</button>
-      </div>
     </div>
-
-    <!-- socket io -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/scripts/room.js"></script>
-  </body>
+</body>
 </html>
