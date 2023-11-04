@@ -18,11 +18,10 @@ const port = process.env.PORT || 3000;
 
 
 app.get("/", (req, res) => {
-    let uid = uuid()
+    let uid = uuid().substring(1,5)
     res.redirect(`room/${uid}`)
 })
 app.get("/room/*", (req, res) => {
-    let uid = uuid()
     res.render("room")
 })
 
@@ -33,8 +32,6 @@ server.listen(port, function () {
 
 // socket io 
 io.on('connection', (socket) => {
-    console.log('a user connected');
-
     socket.on('isAvailable', (path) => {
         socket.broadcast.emit("isThare", path)
     });
@@ -47,7 +44,7 @@ io.on('connection', (socket) => {
     })
 
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
+    // socket.on('disconnect', () => {
+    //     console.log('user disconnected');
+    // });
 });

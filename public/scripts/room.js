@@ -40,6 +40,15 @@ let init = async () => {
 }
 init()
 
+
+let userClose = (e) => {
+    console.log("Closed: ", e)
+    peerConnection = false;
+    dataChannel = undefined;
+    remoteStream = new MediaStream()
+    document.getElementById("user-2").srcObject = remoteStream;
+}
+
 let createOffer = async () => {
     peerConnection = new RTCPeerConnection(servers);
 
@@ -72,8 +81,7 @@ let createOffer = async () => {
     })
 
     dataChannel.onclose = ((e) => {
-        console.log("Closed: ", e)
-        peerConnection = false;
+        userClose(e)
     })
 
     peerConnection.onicecandidate = (e) => {
@@ -136,8 +144,7 @@ let createAnswer = async () => {
         })
 
         dataChannel.onclose = ((e) => {
-            console.log("Closed: ", e)
-            peerConnection = false;
+            userClose(e)
         })
     }
 
@@ -167,9 +174,18 @@ function setMsg(msg, type) {
 }
 let handleSendMsg = () => {
     let msg = document.getElementById("chat-box").value;
-
-    dataChannel.send(msg)
-    setMsg(msg, "i")
+    if (dataChannel) {
+        dataChannel.send(msg)
+        setMsg(msg, "i")
+    }
+    else {
+        alert("connect a user for chating")
+    }
 }
 
+document.addEventListener("keyup", (e) => {
+    if (e.key == "Enter" && document.activeElement === document.getElementById("chat-box")) {
+        handleSendMsg()
+    }
+})
 document.getElementById("send-msg").addEventListener("click", handleSendMsg)

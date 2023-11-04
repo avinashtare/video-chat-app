@@ -10,7 +10,7 @@
     <div class="container">
         <nav class="nav">
             <div class="logo">
-                <img src="logo.png" alt="">
+                <img src="/logo.png" alt="">
             </div>
             <ul class="links">
                 <li><a href="/">Home</a></li>
@@ -22,13 +22,16 @@
         </nav>
         <div class="chatArea">
             <div class="video-sec partition">
-                <video class="video1" id="user-1" autoplay></video>
                 <video class="video2" id="user-2" muted autoplay></video>
+                <video class="video1" id="user-1" autoplay></video>
             </div>
             <div class="chat-sec">
                 <div class="chatBox partition">
                     <span style="color: white; font-size: 1.1rem;">camera is blocked retry again or realod...</span>
-                    <div id="logs"></div>
+                    <br>
+                    <script>document.write(`<h3><a style="color: #fff;" href="${document.URL}" >Share This Url To Your Friend:- ${document.URL}</a></h2>`)</script>
+                    <div id="logs" class="msgLogs">
+                    </div>
                 </div>
                 <div class="chatInput partition">
                     <div class="chat-actions">
